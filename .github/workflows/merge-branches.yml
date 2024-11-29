@@ -1,0 +1,58 @@
+name: Auto Merge Branches
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - 'release/*'
+      - 'feature/*'
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git for automatic merges
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+
+    # Merge feature branch into develop
+    - name: Merge Feature into Develop
+      if: startsWith(github.head_ref, 'feature/') && github.base_ref == 'develop'
+      run: |
+        git checkout develop
+        git pull origin develop
+        git merge ${{ github.head_ref }}
+        git push origin develop
+
+    # Merge release branch into develop
+    - name: Merge Release into Develop
+      if: startsWith(github.head_ref, 'release/') && github.base_ref == 'develop'
+      run: |
+        git checkout develop
+        git pull origin develop
+        git merge ${{ github.head_ref }}
+        git push origin develop
+
+    # Merge release branch into main
+    - name: Merge Release into Main
+      if: startsWith(github.head_ref, 'release/') && github.base_ref == 'main'
+      run: |
+        git checkout main
+        git pull origin main
+        git merge ${{ github.head_ref }}
+        git push origin main
+
+    # Merge develop into main (this will happen when releasing to main)
+    - name: Merge Develop into Main
+      if: github.base_ref == 'main' && startsWith(github.head_ref, 'develop')
+      run: |
+        git checkout main
+        git pull origin main
+        git merge develop
+        git push origin main
