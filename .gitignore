@@ -398,3 +398,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Allow all solution and project files
+!*.sln
+!*.csproj
+!*.vbproj
+!*.fsproj
