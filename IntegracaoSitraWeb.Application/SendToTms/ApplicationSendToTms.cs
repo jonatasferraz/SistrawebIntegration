@@ -109,8 +109,8 @@ namespace IntegracaoSitraWeb.Application.SendToTms
                                 $"{resultado.Sum(r => r.FaturamentoGris ?? 0) * 100:0#############0}", string.Empty }));
 
                             var pathFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "ArquivosToSend");
-                            string fileName = $"NOT{DateTime.Now.ToString("ddhhmm") 
-                                + resultado.First().RemetenteCnpj?.ToString().PadLeft(14, '0') 
+                            string fileName = $"NOT{DateTime.Now.ToString("ddhhmm")
+                                + resultado.First().RemetenteCnpj?.ToString().PadLeft(14, '0')
                                 + resultado.First().FaturamentoCnpj?.ToString().PadLeft(14, '0')}S";
                             GenerateFile(data, templates, pathFile, fileName);
                         }
@@ -264,13 +264,13 @@ namespace IntegracaoSitraWeb.Application.SendToTms
                     string.Empty,"N","000000000000000",$"{(ordem.FaturamentoAdvalorem??0 * 100):0#############0}","000000000000000",$"{(ordem.FaturamentoFrete * 100):0#############0}",
                     "I","000000000000","000000000000","N",string.Empty}),
                 (333, new string[] {
-                    "333","0000","2",$"{ordem.DataPrazo?.ToString("ddMMyyyy") ?? string.Empty}","0000",$"{ordem.DataPrazo?.ToString("ddMMyyyy") ?? string.Empty}",
+                    "333","{ordem.empresa.FATURAMENTO_CNPJ_ENTREGA}","2",$"{ordem.DataPrazo?.ToString("ddMMyyyy") ?? string.Empty}","0000",$"{ordem.DataPrazo?.ToString("ddMMyyyy") ?? string.Empty}",
                     "2359",string.Empty,"N",string.Empty,"31",string.Empty})
-                
+
             };
 
             var linhasMercadoria = PreencherLinhasMercadoria(ordem);
-            if(linhasMercadoria!= null && linhasMercadoria.Count != 0) newData.AddRange(from linha in linhasMercadoria select linha);
+            if (linhasMercadoria != null && linhasMercadoria.Count != 0) newData.AddRange(from linha in linhasMercadoria select linha);
             return newData;
 
         }
